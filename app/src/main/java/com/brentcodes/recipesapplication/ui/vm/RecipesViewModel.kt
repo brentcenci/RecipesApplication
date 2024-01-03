@@ -26,10 +26,11 @@ class RecipesViewModel : ViewModel() {
         getRecipes()
     }
 
-    fun getRecipes() {
+    fun getRecipes(type: String = "public", query: String = "chicken") {
         viewModelScope.launch {
+            recipesUiState = RecipesUiState.Loading
             recipesUiState = try {
-                val listResult = RecipeApi.retrofitService.getResponse("public", "chicken")
+                val listResult = RecipeApi.retrofitService.getResponse(type = type, query = query)
                 RecipesUiState.Success(
                     listResult
                 )
