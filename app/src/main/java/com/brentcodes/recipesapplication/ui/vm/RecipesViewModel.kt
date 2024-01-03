@@ -1,6 +1,7 @@
 package com.brentcodes.recipesapplication.ui.vm
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,12 +22,13 @@ sealed interface RecipesUiState {
 class RecipesViewModel : ViewModel() {
     var recipesUiState: RecipesUiState by mutableStateOf(RecipesUiState.Loading)
         private set
+    var query : MutableState<String> = mutableStateOf("")
 
     init {
         getRecipes()
     }
 
-    fun getRecipes(type: String = "public", query: String = "chicken") {
+    fun getRecipes(query: String = "chicken", type: String = "public") {
         viewModelScope.launch {
             recipesUiState = RecipesUiState.Loading
             recipesUiState = try {
