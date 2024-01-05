@@ -7,14 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.brentcodes.recipesapplication.model.data.EdamamResponse
 import com.brentcodes.recipesapplication.model.network.RecipeApi
+import com.brentcodes.recipesapplication.model.dataSpoonacular.SpoonacularResult
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.lang.Exception
 
 sealed interface RecipesUiState {
-    data class Success(val response : EdamamResponse) : RecipesUiState
+    data class Success(val response : SpoonacularResult) : RecipesUiState
     object Error : RecipesUiState
     object Loading : RecipesUiState
 }
@@ -28,11 +27,11 @@ class RecipesViewModel : ViewModel() {
         getRecipes()
     }
 
-    fun getRecipes(query: String = "chicken", type: String = "public") {
+    fun getRecipes(query: String = "chicken") {
         viewModelScope.launch {
             recipesUiState = RecipesUiState.Loading
             recipesUiState = try {
-                val listResult = RecipeApi.retrofitService.getResponse(type = type, query = query)
+                val listResult = RecipeApi.retrofitService.getResponse(query = query)
                 RecipesUiState.Success(
                     listResult
                 )

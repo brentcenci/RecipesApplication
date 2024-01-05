@@ -1,7 +1,6 @@
 package com.brentcodes.recipesapplication.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,10 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import coil.compose.AsyncImagePainter
-import com.brentcodes.recipesapplication.model.data.EdamamResponse
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
+import com.brentcodes.recipesapplication.model.dataSpoonacular.SpoonacularResult
 
 @Composable
 fun HomeScreen(
@@ -36,9 +34,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     when (recipesUiState) {
-        //is RecipesUiState.Success -> RecipesListScreen(
-        //    response = recipesUiState.response
-        //)
+
         is RecipesUiState.Success -> SearchScreen(
             response = recipesUiState.response,
             viewModel = viewModel,
@@ -53,20 +49,6 @@ fun HomeScreen(
             modifier = modifier.fillMaxSize()
         )
     }
-}
-
-@Composable
-fun RecipesListScreen(
-    response: EdamamResponse,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        content = {
-            items(response.hits) {hit ->
-                Text(text = hit.recipe?.label ?: "null")
-            }
-        }
-    )
 }
 
 @Composable
@@ -144,7 +126,7 @@ fun SearchBar(
 fun SearchScreen(
     viewModel: RecipesViewModel,
     modifier: Modifier = Modifier,
-    response: EdamamResponse
+    response: SpoonacularResult
 ) {
 
     Column {
@@ -155,11 +137,22 @@ fun SearchScreen(
         )
         LazyColumn(
             content = {
-                items(response.hits) {hit ->
-                    Text(text = hit.recipe?.label ?: "null")
+                items(response.results) {result ->
+                    Text(text = result.title ?: "null")
                 }
             }
         )
     }
 
 }
+
+/*
+@Composable
+fun RecipesPanel(
+    viewModel: RecipesViewModel,
+    modifier: Modifier = Modifier,
+    recipe: Recipe
+) {
+    //Need to include details of: Label (Title), Image (Does depend on size?), Source?, Yield (Makes), Diet Labels?,
+
+}*/
