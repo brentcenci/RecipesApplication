@@ -1,11 +1,14 @@
 package com.brentcodes.recipesapplication.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,6 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.brentcodes.recipesapplication.model.dataSpoonacular.Results
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 import com.brentcodes.recipesapplication.model.dataSpoonacular.SpoonacularResult
@@ -136,9 +143,14 @@ fun SearchScreen(
             viewModel = viewModel,
         )
         LazyColumn(
-            content = {
+            /*content = {
                 items(response.results) {result ->
                     Text(text = result.title ?: "null")
+                }
+            }*/
+            content = {
+                items(response.results) { result ->
+                    RecipesPanel(viewModel = viewModel, recipe = result)
                 }
             }
         )
@@ -146,13 +158,32 @@ fun SearchScreen(
 
 }
 
-/*
+
 @Composable
 fun RecipesPanel(
     viewModel: RecipesViewModel,
     modifier: Modifier = Modifier,
-    recipe: Recipe
+    recipe: Results
 ) {
     //Need to include details of: Label (Title), Image (Does depend on size?), Source?, Yield (Makes), Diet Labels?,
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(20.dp)
+            .border(2.dp, color = Color.Black)
+    ) {
+        Text(
+            text = recipe.title?:"No title",
+            modifier = Modifier
+                .align(Alignment.TopStart)
+        )
+        AsyncImage(
+            model = recipe.image!!,
+            contentDescription = "An image of ${recipe.title}",
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+        )
 
-}*/
+    }
+}

@@ -15,13 +15,6 @@ private const val BASE_URL =
 private const val API_KEY =
     "9c6aca7ec19d4dd6b81de9c6a1076983" //remember to format query as apiKey
 
-/*private const val BASE_URL =
-    "https://api.edamam.com/"
-private const val APP_KEY =
-    "634b93f76e9feec92f58d3ff37e54571"
-private const val APP_ID =
-    "dd1c0d38"*/
-
 private val gson = GsonBuilder().setLenient().create()
 
 private val loggingInterceptor = HttpLoggingInterceptor().apply {
