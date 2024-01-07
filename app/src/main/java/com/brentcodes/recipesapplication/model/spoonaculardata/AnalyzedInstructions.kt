@@ -1,4 +1,4 @@
-package com.brentcodes.recipesapplication.model.dataSpoonacular
+package com.brentcodes.recipesapplication.model.spoonaculardata
 
 import com.google.gson.annotations.SerializedName
 

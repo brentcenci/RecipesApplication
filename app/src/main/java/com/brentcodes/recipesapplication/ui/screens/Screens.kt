@@ -36,10 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.brentcodes.recipesapplication.model.dataSpoonacular.Results
+import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
-import com.brentcodes.recipesapplication.model.dataSpoonacular.SpoonacularResult
+import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 
 @Composable
 fun HomeScreen(
@@ -129,12 +129,12 @@ fun SearchBar(
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null)},
             modifier = modifier
                 .fillMaxWidth(0.8F)
+                .padding(0.dp, 0.dp, 20.dp, 0.dp)
         )
         IconButton(
             onClick = {onSearch(text)},
             modifier = Modifier
                 .background(Color(0xFF00abe3), CircleShape)
-                .padding(20.dp, 0.dp, 0.dp, 0.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Search,

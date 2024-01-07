@@ -1,6 +1,6 @@
 package com.brentcodes.recipesapplication.model.network
 
-import com.brentcodes.recipesapplication.model.dataSpoonacular.SpoonacularResult
+import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
