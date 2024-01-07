@@ -3,6 +3,7 @@ package com.brentcodes.recipesapplication.ui.screens
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -119,10 +120,13 @@ fun SearchBar(
         TextField(
             value = text,
             maxLines = 1,
+            singleLine = true,
             keyboardOptions = KeyboardOptions(autoCorrect = false),
             onValueChange = {
-                text = it
-                viewModel.query.value = it
+                if (!it.contains("\n")) {
+                    text = it
+                    viewModel.query.value = it
+                }
                 Log.d("myTag", "Executed onValueChange")
             },
             label = { Text("Search") },
@@ -159,18 +163,25 @@ fun SearchScreen(
             onSearch = viewModel::getRecipes,
             viewModel = viewModel,
         )
-        LazyColumn(
-            /*content = {
-                items(response.results) {result ->
-                    Text(text = result.title ?: "null")
-                }
-            }*/
-            content = {
-                items(response.results) { result ->
-                    RecipesPanel(viewModel = viewModel, recipe = result)
-                }
+        val listOfResults = response.results
+        if (listOfResults.size == 0) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = "No results found for ${viewModel.query.value}",
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
             }
-        )
+        }
+        else {
+            LazyColumn(
+                content = {
+                    items(response.results) { result ->
+                        RecipesPanel(viewModel = viewModel, recipe = result)
+                    }
+                }
+            )
+        }
     }
 
 }
@@ -191,6 +202,9 @@ fun RecipesPanel(
             .background(Color(0xFF00abe3))
             .clip(RoundedCornerShape(5.dp))
             .border(2.dp, Color(0xFF00abe3))
+            .clickable {
+                //navigate to the specific recipe page
+            }
     ) {
         Text(
             text = recipe.title?:"No title".split(" ").joinToString(separator = " ") {

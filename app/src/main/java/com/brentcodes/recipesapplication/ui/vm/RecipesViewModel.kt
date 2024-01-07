@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brentcodes.recipesapplication.model.network.RecipeApi
+import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -18,8 +19,15 @@ sealed interface RecipesUiState {
     object Loading : RecipesUiState
 }
 
+sealed interface RecipesSelection {
+    data class Selected(val recipe : Results) : RecipesSelection
+    object Unselected : RecipesSelection
+}
+
 class RecipesViewModel : ViewModel() {
     var recipesUiState: RecipesUiState by mutableStateOf(RecipesUiState.Loading)
+        private set
+    var recipesSelection: RecipesSelection by mutableStateOf(RecipesSelection.Unselected)
         private set
     var query : MutableState<String> = mutableStateOf("")
 
@@ -40,5 +48,9 @@ class RecipesViewModel : ViewModel() {
                 RecipesUiState.Error
             }
         }
+    }
+
+    fun selectRecipe(recipe : Results) {
+        recipesSelection = RecipesSelection.Selected(recipe = recipe)
     }
 }
