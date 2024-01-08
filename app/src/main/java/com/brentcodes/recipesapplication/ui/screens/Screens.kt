@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -204,6 +205,7 @@ fun RecipesPanel(
             .border(2.dp, Color(0xFF00abe3))
             .clickable {
                 //navigate to the specific recipe page
+                viewModel.selectRecipe(recipe = recipe)
             }
     ) {
         Text(
@@ -222,6 +224,21 @@ fun RecipesPanel(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
         )
+
+    }
+}
+
+@Composable
+fun RecipeTabs() {
+    var tabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Summary", "Nutrition", "Instructions")
+
+    when (tabIndex) {
+        0 -> Log.d("BrentEvent",tabs[0])
+        1 -> Log.d("BrentEvent",tabs[1])
+        2 -> Log.d("BrentEvent",tabs[2])
+    }
+    Column(modifier = Modifier.fillMaxWidth()) {
 
     }
 }
