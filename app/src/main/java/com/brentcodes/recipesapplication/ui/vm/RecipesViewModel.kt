@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.brentcodes.recipesapplication.model.network.RecipeApi
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
@@ -31,6 +32,7 @@ class RecipesViewModel : ViewModel() {
         private set
     var query : MutableState<String> = mutableStateOf("")
     var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
+    var navController: MutableState<NavController?> = mutableStateOf(null)
 
     init {
         getRecipes()
@@ -51,6 +53,9 @@ class RecipesViewModel : ViewModel() {
         }
     }
 
+    fun getSelectedRecipe() {
+        recipesSelection
+    }
     fun selectRecipe(recipe : Results) {
         recipesSelection = RecipesSelection.Selected(recipe = recipe)
     }

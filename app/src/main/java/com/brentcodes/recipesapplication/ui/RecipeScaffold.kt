@@ -11,10 +11,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeScaffold(modifier: Modifier = Modifier, viewModel: RecipesViewModel, topBar: Boolean, bottomBar: Boolean, content: @Composable (PaddingValues) -> Unit) {
+fun RecipeScaffold(
+    modifier: Modifier = Modifier,
+    viewModel: RecipesViewModel = viewModel(),
+    topBar: Boolean,
+    bottomBar: Boolean,
+    content: @Composable (PaddingValues) -> Unit)
+{
     Scaffold(
         modifier = modifier,
         topBar = {

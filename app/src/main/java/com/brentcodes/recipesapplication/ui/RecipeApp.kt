@@ -18,11 +18,11 @@ import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeApp(viewModel: RecipesViewModel = viewModel()) {
+fun RecipeApp(viewModel: RecipesViewModel, modifier: Modifier = Modifier) {
 
-    //HomeScreen(recipesUiState = viewModel.recipesUiState, viewModel = viewModel)
+    HomeScreen(recipesUiState = viewModel.recipesUiState, viewModel = viewModel, modifier = modifier)
 
-    Scaffold(
+    /*Scaffold(
         topBar = {
             TopAppBar(title = { Text(viewModel.topAppBarTitle.value) } )
         },
@@ -30,5 +30,5 @@ fun RecipeApp(viewModel: RecipesViewModel = viewModel()) {
             Log.d("padding", "$paddingValues")
             HomeScreen(recipesUiState = viewModel.recipesUiState, viewModel = viewModel, modifier = Modifier.padding(top = 64.dp))
         }
-    )
+    )*/
 }

@@ -37,11 +37,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
+import com.brentcodes.recipesapplication.ui.NestedScreens
 
 @Composable
 fun HomeScreen(
@@ -54,7 +57,7 @@ fun HomeScreen(
         is RecipesUiState.Success -> SearchScreen(
             response = recipesUiState.response,
             viewModel = viewModel,
-            modifier = modifier
+            modifier = modifier,
         )
         is RecipesUiState.Error -> ErrorScreen(
             viewModel = viewModel, 
@@ -155,7 +158,8 @@ fun SearchBar(
 fun SearchScreen(
     viewModel: RecipesViewModel,
     modifier: Modifier = Modifier,
-    response: SpoonacularResult
+    response: SpoonacularResult,
+    navController: NavController = viewModel.navController.value ?: rememberNavController()
 ) {
 
     Column(
@@ -194,7 +198,8 @@ fun SearchScreen(
 fun RecipesPanel(
     viewModel: RecipesViewModel,
     modifier: Modifier = Modifier,
-    recipe: Results
+    recipe: Results,
+    navController: NavController = viewModel.navController.value?: rememberNavController()
 ) {
     //Need to include details of: Label (Title), Image (Does depend on size?), Source?, Yield (Makes), Diet Labels?,
     Box(
@@ -208,6 +213,7 @@ fun RecipesPanel(
             .clickable {
                 //navigate to the specific recipe page
                 viewModel.selectRecipe(recipe = recipe)
+                navController.navigate(NestedScreens.Recipe.route)
             }
     ) {
         Text(
