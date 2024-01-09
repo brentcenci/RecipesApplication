@@ -158,7 +158,9 @@ fun SearchScreen(
     response: SpoonacularResult
 ) {
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         SearchBar(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onSearch = viewModel::getRecipes,

@@ -30,6 +30,7 @@ class RecipesViewModel : ViewModel() {
     var recipesSelection: RecipesSelection by mutableStateOf(RecipesSelection.Unselected)
         private set
     var query : MutableState<String> = mutableStateOf("")
+    var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
 
     init {
         getRecipes()
