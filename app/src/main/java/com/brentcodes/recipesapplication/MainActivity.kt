@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -41,7 +39,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = NestedScreens.Search.route
                     ) {
                         composable(route = NestedScreens.Search.route) {
-                            RecipeScaffold(topBar = true, bottomBar = false, viewModel = viewModel) {
+                            RecipeScaffold(topBar = true, bottomBar = false, viewModel = viewModel, navController = navController) {
                                 RecipeApp(modifier = Modifier.padding(it), viewModel = viewModel)
                             }
                         }
@@ -50,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             route = NestedScreens.Recipe.route
                         ) {
                             composable(route = NestedScreens.Recipe.Summary.route) {
-                                RecipeScaffold(topBar = true, bottomBar = false) {
+                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
                                     RecipeSummaryScreen(modifier = Modifier.padding(it), viewModel = viewModel)
                                 }
                             }
