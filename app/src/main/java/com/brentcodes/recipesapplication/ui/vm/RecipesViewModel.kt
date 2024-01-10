@@ -58,5 +58,6 @@ class RecipesViewModel : ViewModel() {
     }
     fun selectRecipe(recipe : Results) {
         recipesSelection = RecipesSelection.Selected(recipe = recipe)
+        topAppBarTitle.value = RecipesSelection.Selected(recipe = recipe).recipe.title ?: "Unnamed Recipe"
     }
 }

@@ -7,7 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +21,8 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
+import com.brentcodes.recipesapplication.ui.RecipeInstructionsScreen
+import com.brentcodes.recipesapplication.ui.RecipeNutritionScreen
 import com.brentcodes.recipesapplication.ui.RecipeScaffold
 import com.brentcodes.recipesapplication.ui.RecipeSummaryScreen
 import com.brentcodes.recipesapplication.ui.theme.RecipesApplicationTheme
@@ -25,6 +33,65 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RecipesApplicationTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    val viewModel: RecipesViewModel = viewModel()
+                    viewModel.navController.value = navController
+                    val topBar : Boolean = true
+                        // (navController.currentDestination?.route != NestedScreens.Search.route)
+                    /*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*/
+
+                    var bottomBar by remember { mutableStateOf(false) }
+
+                    // Observe the current destination and update bottomBar accordingly
+                    navController.addOnDestinationChangedListener { _, destination, _ ->
+                        bottomBar = when (destination.route) {
+                            NestedScreens.Recipe.Summary.route,
+                            NestedScreens.Recipe.Nutrition.route,
+                            NestedScreens.Recipe.Instructions.route -> true
+                            else -> false
+                        }
+                    }
+
+                    RecipeScaffold(topBar = topBar, bottomBar = bottomBar, viewModel = viewModel, navController = navController) {paddingValues ->
+                        NavHost(navController = navController, startDestination = NestedScreens.Search.route) {
+                            //SEARCH SCREEN COMPOSABLE
+                            composable(route = NestedScreens.Search.route) {
+                                //bottomBar = false
+                                RecipeApp(modifier = Modifier.padding(paddingValues), viewModel = viewModel)
+                            }
+
+                            //NESTED NAVIGATION
+                            navigation(route = NestedScreens.Recipe.route, startDestination = NestedScreens.Recipe.Summary.route) {
+
+                                //SUMMARY SCREEN COMPOSABLE
+                                composable(route = NestedScreens.Recipe.Summary.route) {
+                                    //bottomBar = true
+                                    RecipeSummaryScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                }
+
+                                //NUTRITION SCREEN COMPOSABLE
+                                composable(route = NestedScreens.Recipe.Nutrition.route) {
+                                    //bottomBar = true
+                                    RecipeNutritionScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                }
+
+                                //INSTRUCTIONS SCREEN COMPOSABLE
+                                composable(route = NestedScreens.Recipe.Instructions.route) {
+                                    //bottomBar = true
+                                    RecipeInstructionsScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+/*            RecipesApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -53,16 +120,28 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable(route = NestedScreens.Recipe.Nutrition.route) {
-                                //RecipeNutritionScreen()
+                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
+                                    RecipeNutritionScreen(modifier = Modifier.padding(it), viewModel = viewModel)
+                                }
                             }
                             composable(route = NestedScreens.Recipe.Instructions.route) {
-                                //RecipeInstructionsScreen()
+                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
+                                    RecipeInstructionsScreen(modifier = Modifier.padding(it), viewModel = viewModel)
+                                }
                             }
                         }
                     }
 
                 }
-            }
+            }*/
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewScaffoldTest() {
+    RecipeScaffold(topBar = true, bottomBar = true) {
+        RecipeSummaryScreen(modifier = Modifier.padding(it), viewModel = viewModel())
     }
 }
