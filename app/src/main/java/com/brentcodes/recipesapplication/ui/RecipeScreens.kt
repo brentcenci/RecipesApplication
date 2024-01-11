@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -64,8 +65,13 @@ fun TopNavBar(navController: NavController, viewModel: RecipesViewModel) {
 @Composable
 fun RecipeBottomNavBar(navController: NavController) {
     BottomNavigation {
+
+        var selectedRoute by remember { mutableStateOf(navController.currentDestination?.route)}
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+             selectedRoute = destination.route
+        }
         BottomNavigationItem(
-            selected = navController.currentDestination?.route == NestedScreens.Recipe.Summary.route,
+            selected = selectedRoute == NestedScreens.Recipe.Summary.route,
             onClick = {
                  navController.navigate(NestedScreens.Recipe.Summary.route)
             },
@@ -76,7 +82,7 @@ fun RecipeBottomNavBar(navController: NavController) {
         )
 
         BottomNavigationItem(
-            selected = navController.currentDestination?.route == NestedScreens.Recipe.Nutrition.route,
+            selected = selectedRoute == NestedScreens.Recipe.Nutrition.route,
             onClick = {
                 navController.navigate(NestedScreens.Recipe.Nutrition.route)
             },
@@ -87,7 +93,7 @@ fun RecipeBottomNavBar(navController: NavController) {
         )
 
         BottomNavigationItem(
-            selected = navController.currentDestination?.route == NestedScreens.Recipe.Nutrition.route,
+            selected = selectedRoute == NestedScreens.Recipe.Instructions.route,
             onClick = {
                 navController.navigate(NestedScreens.Recipe.Instructions.route)
             },

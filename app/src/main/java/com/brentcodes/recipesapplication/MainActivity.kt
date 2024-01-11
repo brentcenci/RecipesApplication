@@ -91,49 +91,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-/*            RecipesApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    val viewModel: RecipesViewModel = viewModel()
-                    viewModel.navController.value = navController
-
-                    NavHost(
-                        navController = navController,
-                        startDestination = NestedScreens.Search.route
-                    ) {
-                        composable(route = NestedScreens.Search.route) {
-                            RecipeScaffold(topBar = true, bottomBar = false, viewModel = viewModel, navController = navController) {
-                                RecipeApp(modifier = Modifier.padding(it), viewModel = viewModel)
-                            }
-                        }
-                        navigation(
-                            startDestination = NestedScreens.Recipe.Summary.route,
-                            route = NestedScreens.Recipe.route
-                        ) {
-                            composable(route = NestedScreens.Recipe.Summary.route) {
-                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
-                                    RecipeSummaryScreen(modifier = Modifier.padding(it), viewModel = viewModel)
-                                }
-                            }
-                            composable(route = NestedScreens.Recipe.Nutrition.route) {
-                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
-                                    RecipeNutritionScreen(modifier = Modifier.padding(it), viewModel = viewModel)
-                                }
-                            }
-                            composable(route = NestedScreens.Recipe.Instructions.route) {
-                                RecipeScaffold(topBar = true, bottomBar = true, navController = navController) {
-                                    RecipeInstructionsScreen(modifier = Modifier.padding(it), viewModel = viewModel)
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }*/
         }
     }
 }
