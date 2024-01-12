@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.brentcodes.recipesapplication.model.SearchFilter
 import com.brentcodes.recipesapplication.model.network.RecipeApi
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
@@ -34,8 +35,38 @@ class RecipesViewModel : ViewModel() {
     var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
     var navController: MutableState<NavController?> = mutableStateOf(null)
 
+    var filtersList : MutableState<List<SearchFilter>> = mutableStateOf(emptyList<SearchFilter>())
+        private set
+
+
     init {
+        populateFiltersList()
         getRecipes()
+    }
+
+    fun populateFiltersList() {
+        filtersList.value = listOf(
+            SearchFilter(
+                type = "Cuisine",
+                options = listOf("african", "asian", "american", "british", "cajun", "caribbean", "chinese", "eastern european", "european", "french",
+                "german", "greek", "indian", "irish", "italian", "japanese", "jewish", "korean", "latin american", "mediterranean", "mexican", "middle eastern",
+                "nordic", "southern", "spanish", "thai", "vietnamese"),
+                open = false,
+                selected = mutableListOf()
+            ),
+            SearchFilter(
+                type = "Diet",
+                options = listOf("gluten free", "ketogenic", "vegetarian", "lacto-vegetarian", "ovo-vegetarian", "vegan", "pescetarian", "paleo", "primal"),
+                open = false,
+                selected = mutableListOf()
+            ),
+            SearchFilter(
+                type = "Allergies",
+                options = listOf("dairy", "egg", "gluten", "grain", "peanut", "seafood", "sesame", "shellfish", "soy", "sulfite", "tree nut", "wheat"),
+                open = false,
+                selected = mutableListOf()
+            )
+        )
     }
 
     fun getRecipes(query: String = "chicken") {

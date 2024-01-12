@@ -4,14 +4,21 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,10 +27,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -54,7 +63,7 @@ fun HomeScreen(
 ) {
     when (recipesUiState) {
 
-        is RecipesUiState.Success -> SearchScreen(
+        is RecipesUiState.Success -> TestSearchScreen(
             response = recipesUiState.response,
             viewModel = viewModel,
             modifier = modifier,
@@ -107,92 +116,6 @@ fun LoadingScreen(
 
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar(
-    modifier: Modifier, 
-    onSearch: (String) -> Unit, 
-    viewModel: RecipesViewModel) {
-    var text by remember {
-        viewModel.query
-    } 
-    Row(
-        modifier = Modifier
-            .padding(20.dp)
-    ) {
-        TextField(
-            value = text,
-            maxLines = 1,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(autoCorrect = false),
-            onValueChange = {
-                if (!it.contains("\n")) {
-                    text = it
-                    viewModel.query.value = it
-                }
-                Log.d("myTag", "Executed onValueChange")
-            },
-            label = { Text("Search") },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null)},
-            modifier = modifier
-                .fillMaxWidth(0.8F)
-                .padding(0.dp, 0.dp, 20.dp, 0.dp)
-        )
-        IconButton(
-            onClick = {onSearch(text)},
-            modifier = Modifier
-                .background(Color(0xFF00abe3), CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription = null,
-                tint = Color.White
-            )
-        }
-    }
-
-}
-
-@Composable
-fun SearchScreen(
-    viewModel: RecipesViewModel,
-    modifier: Modifier = Modifier,
-    response: SpoonacularResult,
-    navController: NavController = viewModel.navController.value ?: rememberNavController()
-) {
-
-    Column(
-        modifier = modifier
-    ) {
-        SearchBar(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onSearch = viewModel::getRecipes,
-            viewModel = viewModel,
-        )
-        val listOfResults = response.results
-        if (listOfResults.size == 0) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(
-                    text = "No results found for ${viewModel.query.value}",
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
-            }
-        }
-        else {
-            LazyColumn(
-                content = {
-                    items(response.results) { result ->
-                        RecipesPanel(viewModel = viewModel, recipe = result)
-                    }
-                }
-            )
-        }
-    }
-
-}
-
 
 @Composable
 fun RecipesPanel(

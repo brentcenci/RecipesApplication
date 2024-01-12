@@ -19,12 +19,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
 import com.brentcodes.recipesapplication.ui.RecipeInstructionsScreen
 import com.brentcodes.recipesapplication.ui.RecipeNutritionScreen
 import com.brentcodes.recipesapplication.ui.RecipeScaffold
 import com.brentcodes.recipesapplication.ui.RecipeSummaryScreen
+import com.brentcodes.recipesapplication.ui.screens.TestSearchScreen
 import com.brentcodes.recipesapplication.ui.theme.RecipesApplicationTheme
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
@@ -98,7 +100,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun PreviewScaffoldTest() {
-    RecipeScaffold(topBar = true, bottomBar = true) {
-        RecipeSummaryScreen(modifier = Modifier.padding(it), viewModel = viewModel())
+    RecipeScaffold(topBar = true, bottomBar = false) {
+        TestSearchScreen(modifier = Modifier.padding(it), viewModel = viewModel(), response = SpoonacularResult())
     }
 }
