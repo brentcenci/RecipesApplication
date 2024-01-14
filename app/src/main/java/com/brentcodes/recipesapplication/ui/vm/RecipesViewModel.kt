@@ -12,6 +12,10 @@ import com.brentcodes.recipesapplication.model.SearchFilter
 import com.brentcodes.recipesapplication.model.network.RecipeApi
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
+import com.brentcodes.recipesapplication.ui.NestedScreens
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -38,6 +42,13 @@ class RecipesViewModel : ViewModel() {
     var filtersList : MutableState<List<SearchFilter>> = mutableStateOf(emptyList<SearchFilter>())
         private set
 
+    private val _filteredList: MutableStateFlow<List<SearchFilter>> = MutableStateFlow(emptyList())
+    val filteredList = _filteredList.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    private val _selectedFilter: MutableStateFlow<SearchFilter?> = MutableStateFlow(null)
+    val selectedFilter = _filteredList.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+
 
     init {
         populateFiltersList()
@@ -47,6 +58,7 @@ class RecipesViewModel : ViewModel() {
     fun populateFiltersList() {
         filtersList.value = listOf(
             SearchFilter(
+                id = 0,
                 type = "Cuisine",
                 options = listOf("african", "asian", "american", "british", "cajun", "caribbean", "chinese", "eastern european", "european", "french",
                 "german", "greek", "indian", "irish", "italian", "japanese", "jewish", "korean", "latin american", "mediterranean", "mexican", "middle eastern",
@@ -55,19 +67,45 @@ class RecipesViewModel : ViewModel() {
                 selected = mutableListOf()
             ),
             SearchFilter(
+                id = 1,
                 type = "Diet",
                 options = listOf("gluten free", "ketogenic", "vegetarian", "lacto-vegetarian", "ovo-vegetarian", "vegan", "pescetarian", "paleo", "primal"),
                 open = false,
                 selected = mutableListOf()
             ),
             SearchFilter(
+                id = 2,
                 type = "Allergies",
                 options = listOf("dairy", "egg", "gluten", "grain", "peanut", "seafood", "sesame", "shellfish", "soy", "sulfite", "tree nut", "wheat"),
                 open = false,
                 selected = mutableListOf()
             )
         )
+        _filteredList.value = filtersList.value
     }
+
+    fun toggleFilter(id: Int) {
+        val chosenFilter = _filteredList.value.find {
+            it.id == id
+        }
+        chosenFilter!!.open = !chosenFilter.open
+        Log.d("filters", "${chosenFilter.type} toggled to ${chosenFilter.open}")
+    }
+
+    /*fun selectFilter(id: Int) {
+        val selected = _filteredList.value.find {
+            it.id == id
+        }
+        if (_selectedFilter.value == null) {
+            _selectedFilter.value = selected
+        }
+        else if (_selectedFilter.value.id == id) {
+            _selectedFilter.value
+        }
+
+    }*/
+
+
 
     fun getRecipes(query: String = "chicken") {
         viewModelScope.launch {

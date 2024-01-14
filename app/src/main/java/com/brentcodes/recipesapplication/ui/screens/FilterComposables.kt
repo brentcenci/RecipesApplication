@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -123,11 +124,12 @@ fun ChipsWithDropDown(
 
 @Composable
 fun TestChipsWithDropDown(
-    filter: SearchFilter
+    filter: SearchFilter,
+    onClick: () -> Unit
 ) {
     Chip(
         text = filter.type,
-        onClick = { filter.open = !filter.open },
+        onClick = onClick,
         isSelected = filter.selected.isNotEmpty()
     )
 }
@@ -184,6 +186,8 @@ fun TestSearchScreen(
 
         item { TestSearchBar(onSearch = viewModel::getRecipes, viewModel = viewModel) }
 
+        item { FiltersBar(viewModel = viewModel) }
+        
         val listOfResults = response.results
 
         //If no Search Results
@@ -218,8 +222,6 @@ fun TestSearchBar(
     var text by remember {
         viewModel.query
     }
-
-    var filtersList by remember { viewModel.filtersList }
 
     Column(modifier = modifier.fillMaxWidth()) {
 
@@ -261,54 +263,59 @@ fun TestSearchBar(
                 )
             }
         }
+    }
 
-        //Row to hold the Filter Buttons
-        LazyRow(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth()
-        ) {
-            items(filtersList) { filter ->
-                TestChipsWithDropDown(
-                    filter
-                )
-            }
+
+}
+
+@Composable
+fun FiltersBar(viewModel: RecipesViewModel) {
+
+    val filtersList = viewModel.filteredList.collectAsState()
+
+    LazyRow(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth()
+    ) {
+        items(filtersList.value) { filter ->
+            TestChipsWithDropDown(
+                filter = filter,
+                onClick = { viewModel.toggleFilter(filter.id) }
+            )
         }
+    }
 
-        val currentFilter: SearchFilter? =
-            if (filtersList.any { it.open }) {
-                filtersList.filter { filter ->
-                    filter.open
-                }.first()
-            } else null
+    val currentFilter: SearchFilter? =
+        if (filtersList.value.any { it.open }) {
+            filtersList.value.filter { filter ->
+                filter.open
+            }.first()
+        } else null
 
-        if (currentFilter != null) {
-            Column {
-                currentFilter.options.chunked(2).forEach {chunk ->
-                    Row {
-                        chunk.forEach{option ->
-                            Row(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable {
-                                        toggleOption(currentFilter.selected, option)
-                                    }
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Checkbox(
-                                    checked = currentFilter.selected.contains(option),
-                                    onCheckedChange = null // Handle the checked state as needed
-                                )
-                                Text(text = option)
-                            }
+    if (currentFilter != null) {
+        Column {
+            currentFilter.options.chunked(2).forEach {chunk ->
+                Row {
+                    chunk.forEach{option ->
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    toggleOption(currentFilter.selected, option)
+                                }
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Checkbox(
+                                checked = currentFilter.selected.contains(option),
+                                onCheckedChange = null // Handle the checked state as needed
+                            )
+                            Text(text = option)
                         }
                     }
                 }
             }
         }
-
     }
-
-
 }
