@@ -15,6 +15,8 @@ import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -39,14 +41,33 @@ class RecipesViewModel : ViewModel() {
     var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
     var navController: MutableState<NavController?> = mutableStateOf(null)
 
-    var filtersList : MutableState<List<SearchFilter>> = mutableStateOf(emptyList<SearchFilter>())
-        private set
 
     private val _filteredList: MutableStateFlow<List<SearchFilter>> = MutableStateFlow(emptyList())
-    val filteredList = _filteredList.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val filteredList = _filteredList.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _selectedFilter: MutableStateFlow<SearchFilter?> = MutableStateFlow(null)
-    val selectedFilter = _filteredList.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val selectedFilter = _filteredList.stateIn(viewModelScope, SharingStarted.Lazily, null)
+
+
+    private val _cuisineFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _dietFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _allergiesFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    val cuisineFilterOpen: StateFlow<Boolean> = _cuisineFilterOpen.asStateFlow()
+    val dietFilterOpen: StateFlow<Boolean> = _dietFilterOpen.asStateFlow()
+    val allergiesFilterOpen: StateFlow<Boolean> = _allergiesFilterOpen.asStateFlow()
+
+    fun toggleCuisineFilter() {
+        _cuisineFilterOpen.value = !_cuisineFilterOpen.value
+    }
+
+    fun toggleDietFilter() {
+        _dietFilterOpen.value = !_dietFilterOpen.value
+    }
+
+    fun toggleAllergiesFilter() {
+        _allergiesFilterOpen.value = !_allergiesFilterOpen.value
+    }
 
 
 
@@ -55,8 +76,8 @@ class RecipesViewModel : ViewModel() {
         getRecipes()
     }
 
-    fun populateFiltersList() {
-        filtersList.value = listOf(
+    private fun populateFiltersList() {
+        val filtersList = listOf(
             SearchFilter(
                 id = 0,
                 type = "Cuisine",
@@ -81,15 +102,18 @@ class RecipesViewModel : ViewModel() {
                 selected = mutableListOf()
             )
         )
-        _filteredList.value = filtersList.value
+        _filteredList.value = filtersList
     }
 
     fun toggleFilter(id: Int) {
-        val chosenFilter = _filteredList.value.find {
-            it.id == id
-        }
+
+        Log.d("RecipesViewModel", "Toggle Filter: $id")
+        val chosenFilter = _filteredList.value.find { it.id == id }
         chosenFilter!!.open = !chosenFilter.open
-        Log.d("filters", "${chosenFilter.type} toggled to ${chosenFilter.open}")
+        //_filteredList.value = _filteredList.value // Notify the change
+        val temp = _filteredList.value
+        _filteredList.value = temp
+        Log.d("RecipesViewModel", "Updated FiltersList: ${_filteredList.value}")
     }
 
     /*fun selectFilter(id: Int) {
@@ -100,7 +124,7 @@ class RecipesViewModel : ViewModel() {
             _selectedFilter.value = selected
         }
         else if (_selectedFilter.value.id == id) {
-            _selectedFilter.value
+            _selectedFilter.value.
         }
 
     }*/

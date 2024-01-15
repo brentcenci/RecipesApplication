@@ -26,7 +26,7 @@ import com.brentcodes.recipesapplication.ui.RecipeInstructionsScreen
 import com.brentcodes.recipesapplication.ui.RecipeNutritionScreen
 import com.brentcodes.recipesapplication.ui.RecipeScaffold
 import com.brentcodes.recipesapplication.ui.RecipeSummaryScreen
-import com.brentcodes.recipesapplication.ui.screens.TestSearchScreen
+import com.brentcodes.recipesapplication.ui.screens.SearchScreen
 import com.brentcodes.recipesapplication.ui.theme.RecipesApplicationTheme
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
@@ -43,8 +43,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val viewModel: RecipesViewModel = viewModel()
                     viewModel.navController.value = navController
-                    val topBar : Boolean = true
-                        // (navController.currentDestination?.route != NestedScreens.Search.route)
+                    val topBar: Boolean = true
+                    // (navController.currentDestination?.route != NestedScreens.Search.route)
                     /*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*/
 
                     var bottomBar by remember { mutableStateOf(false) }
@@ -55,37 +55,62 @@ class MainActivity : ComponentActivity() {
                             NestedScreens.Recipe.Summary.route,
                             NestedScreens.Recipe.Nutrition.route,
                             NestedScreens.Recipe.Instructions.route -> true
+
                             else -> false
                         }
                     }
 
-                    RecipeScaffold(topBar = topBar, bottomBar = bottomBar, viewModel = viewModel, navController = navController) {paddingValues ->
-                        NavHost(navController = navController, startDestination = NestedScreens.Search.route) {
+                    RecipeScaffold(
+                        topBar = topBar,
+                        bottomBar = bottomBar,
+                        viewModel = viewModel,
+                        navController = navController
+                    ) { paddingValues ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = NestedScreens.Search.route
+                        ) {
                             //SEARCH SCREEN COMPOSABLE
                             composable(route = NestedScreens.Search.route) {
                                 //bottomBar = false
-                                RecipeApp(modifier = Modifier.padding(paddingValues), viewModel = viewModel)
+                                RecipeApp(
+                                    modifier = Modifier.padding(paddingValues),
+                                    viewModel = viewModel
+                                )
                             }
 
                             //NESTED NAVIGATION
-                            navigation(route = NestedScreens.Recipe.route, startDestination = NestedScreens.Recipe.Summary.route) {
+                            navigation(
+                                route = NestedScreens.Recipe.route,
+                                startDestination = NestedScreens.Recipe.Summary.route
+                            ) {
 
                                 //SUMMARY SCREEN COMPOSABLE
                                 composable(route = NestedScreens.Recipe.Summary.route) {
                                     //bottomBar = true
-                                    RecipeSummaryScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                    RecipeSummaryScreen(
+                                        modifier = Modifier.padding(paddingValues),
+                                        viewModel = viewModel
+                                    )
                                 }
 
                                 //NUTRITION SCREEN COMPOSABLE
                                 composable(route = NestedScreens.Recipe.Nutrition.route) {
                                     //bottomBar = true
-                                    RecipeNutritionScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                    RecipeNutritionScreen(
+                                        modifier = Modifier.padding(paddingValues),
+                                        viewModel = viewModel
+                                    )
                                 }
 
                                 //INSTRUCTIONS SCREEN COMPOSABLE
                                 composable(route = NestedScreens.Recipe.Instructions.route) {
                                     //bottomBar = true
-                                    RecipeInstructionsScreen(modifier = Modifier.padding(paddingValues),viewModel = viewModel)
+                                    RecipeInstructionsScreen(
+                                        modifier = Modifier.padding(
+                                            paddingValues
+                                        ), viewModel = viewModel
+                                    )
                                 }
 
                             }
@@ -94,13 +119,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewScaffoldTest() {
-    RecipeScaffold(topBar = true, bottomBar = false) {
-        TestSearchScreen(modifier = Modifier.padding(it), viewModel = viewModel(), response = SpoonacularResult())
     }
 }
