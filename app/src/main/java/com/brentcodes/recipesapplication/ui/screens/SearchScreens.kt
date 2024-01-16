@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Search
@@ -29,27 +26,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.brentcodes.recipesapplication.model.SearchFilter
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
@@ -129,11 +119,9 @@ fun RecipesPanel(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .padding(20.dp)
+            .height(200.dp)
+            .padding(5.dp)
             .background(Color(0xFF00abe3))
-            .clip(RoundedCornerShape(5.dp))
-            .border(2.dp, Color(0xFF00abe3))
             .clickable {
                 //navigate to the specific recipe page
                 viewModel.selectRecipe(recipe = recipe)
@@ -158,6 +146,42 @@ fun RecipesPanel(
         )
 
     }
+}
+
+@Composable
+fun TestRecipesPanel(
+    viewModel: RecipesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    modifier: Modifier = Modifier,
+    recipe: Results = Results(),
+    navController: NavController = viewModel.navController.value?: rememberNavController()
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clip(RoundedCornerShape(20))
+            .border(2.dp, Color.Blue, RoundedCornerShape(20))
+            .clickable {
+                viewModel.selectRecipe(recipe = recipe)
+                navController.navigate(NestedScreens.Recipe.route)
+            }
+    ) {
+        AsyncImage(
+            model = recipe.image!!,
+            contentDescription = "Image of ${recipe.title}",
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Fit
+        )
+        Text(
+            text = recipe.title?.split(" ")?.joinToString(separator = " ") {
+                it.replaceFirstChar(Char::titlecaseChar)
+            }?: "No Title",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+
+        )
+    }
+
 }
 
 

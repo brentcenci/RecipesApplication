@@ -7,26 +7,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
-import com.brentcodes.recipesapplication.ui.RecipeInstructionsScreen
-import com.brentcodes.recipesapplication.ui.RecipeNutritionScreen
-import com.brentcodes.recipesapplication.ui.RecipeScaffold
-import com.brentcodes.recipesapplication.ui.RecipeSummaryScreen
-import com.brentcodes.recipesapplication.ui.screens.SearchScreen
+import com.brentcodes.recipesapplication.ui.screens.RecipeInstructionsScreen
+import com.brentcodes.recipesapplication.ui.screens.RecipeNutritionScreen
+import com.brentcodes.recipesapplication.ui.screens.RecipeScaffold
+import com.brentcodes.recipesapplication.ui.screens.RecipeSummaryScreen
 import com.brentcodes.recipesapplication.ui.theme.RecipesApplicationTheme
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
@@ -43,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val viewModel: RecipesViewModel = viewModel()
                     viewModel.navController.value = navController
-                    val topBar: Boolean = true
+                    val topBar = true
                     // (navController.currentDestination?.route != NestedScreens.Search.route)
                     /*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*/
 

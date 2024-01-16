@@ -37,6 +37,9 @@ class RecipesViewModel : ViewModel() {
         private set
     var recipesSelection: RecipesSelection by mutableStateOf(RecipesSelection.Unselected)
         private set
+    val selectedRecipe: MutableState<Results?> = mutableStateOf(null)
+
+
     var query : MutableState<String> = mutableStateOf("")
     var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
     var navController: MutableState<NavController?> = mutableStateOf(null)
@@ -150,6 +153,7 @@ class RecipesViewModel : ViewModel() {
         recipesSelection
     }
     fun selectRecipe(recipe : Results) {
+        selectedRecipe.value = recipe
         recipesSelection = RecipesSelection.Selected(recipe = recipe)
         topAppBarTitle.value = RecipesSelection.Selected(recipe = recipe).recipe.title ?: "Unnamed Recipe"
     }

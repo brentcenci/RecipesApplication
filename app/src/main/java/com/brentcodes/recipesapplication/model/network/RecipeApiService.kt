@@ -36,7 +36,8 @@ interface RecipeApiService {
     @GET("recipes/complexSearch")
     suspend fun getResponse(
         @Query("query") query: String,
-        @Query("apiKey") apiKey: String = API_KEY
+        @Query("apiKey") apiKey: String = API_KEY,
+        @Query("addRecipeNutrition") addRecipeNutrition: Boolean = true
     ) : SpoonacularResult
 }
 
