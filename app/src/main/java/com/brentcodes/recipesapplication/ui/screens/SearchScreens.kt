@@ -119,7 +119,7 @@ fun RecipesPanel(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(100.dp)
             .padding(5.dp)
             .background(Color(0xFF00abe3))
             .clickable {
