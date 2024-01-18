@@ -31,6 +31,7 @@ import com.brentcodes.recipesapplication.model.spoonaculardata.AnalyzedInstructi
 import com.brentcodes.recipesapplication.model.spoonaculardata.Ingredients
 import com.brentcodes.recipesapplication.model.spoonaculardata.Nutrients
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
+import com.brentcodes.recipesapplication.model.spoonaculardata.Steps
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
 @Composable
@@ -204,12 +205,13 @@ fun RecipeIngredientSection(ingredient: Ingredients) {
 
 
 @Composable
-fun RecipeStepSection(analyzedInstruction: AnalyzedInstructions) {
+fun RecipeStepSection(step: Steps) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp, 0.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            //Text(text = "${ingredient.name?: "Unnamed Ingredient"}", modifier = Modifier.weight(1f))
+            Text(text = "Step ${step.number}", modifier = Modifier.weight(1f))
+            Text(text = "${step.step}", modifier = Modifier.weight(5f))
         }
         Divider(color = Color.LightGray)
     }
@@ -222,7 +224,12 @@ fun RecipeInstructionsScreen(modifier: Modifier = Modifier, viewModel: RecipesVi
 
     val recipe = remember { viewModel.selectedRecipe.value } ?: Results()
 
-    LazyColumn(modifier = modifier.padding(top = 20.dp)) {
+    LazyColumn(modifier = modifier) {
+        item {
+            Row(modifier = Modifier.padding(10.dp, 0.dp)) {
+                Text(text = "List of Ingredients", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            }
+        }
         stickyHeader {
             RecipeHeader(text = "Ingredients")
         }
@@ -232,14 +239,22 @@ fun RecipeInstructionsScreen(modifier: Modifier = Modifier, viewModel: RecipesVi
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
-        stickyHeader {
-            RecipeHeader("Steps")
+        item {
+            Row(modifier = Modifier.padding(10.dp, 0.dp)) {
+                Text(text = "Steps", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            }
+        }
+        items(recipe.analyzedInstructions) { instruction->
+            RecipeHeader(instruction.name?: "")
+            instruction.steps.forEach {step ->
+                RecipeStepSection(step = step)
+            }
+
         }
         item {
             Button(onClick = {Log.d("RecipeState", "${recipe.analyzedInstructions}")}) {
                 Text("click for analyzed instructions")
             }
         }
-
     }
 }
