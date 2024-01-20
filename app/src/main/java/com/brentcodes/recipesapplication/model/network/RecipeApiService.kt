@@ -37,7 +37,11 @@ interface RecipeApiService {
     suspend fun getResponse(
         @Query("query") query: String,
         @Query("apiKey") apiKey: String = API_KEY,
-        @Query("addRecipeNutrition") addRecipeNutrition: Boolean = true
+        @Query("addRecipeNutrition") addRecipeNutrition: Boolean = true,
+        @Query("cuisine") cuisine: String? = null,
+        @Query("diet") diet: String? = null,
+        @Query("intolerances") intolerances: String? = null,
+        @Query("offset") offset: Int? = null
     ) : SpoonacularResult
 }
 

@@ -27,6 +27,12 @@ sealed interface RecipesUiState {
     object Loading : RecipesUiState
 }
 
+sealed interface RecipesLoadMoreState {
+    object Success : RecipesLoadMoreState
+    object Error : RecipesLoadMoreState
+    object Loading : RecipesLoadMoreState
+}
+
 sealed interface RecipesSelection {
     data class Selected(val recipe : Results) : RecipesSelection
     object Unselected : RecipesSelection
@@ -35,12 +41,16 @@ sealed interface RecipesSelection {
 class RecipesViewModel : ViewModel() {
     var recipesUiState: RecipesUiState by mutableStateOf(RecipesUiState.Loading)
         private set
+    var recipesLoadMoreState: RecipesLoadMoreState by mutableStateOf(RecipesLoadMoreState.Success)
+        private set
     var recipesSelection: RecipesSelection by mutableStateOf(RecipesSelection.Unselected)
         private set
     val selectedRecipe: MutableState<Results?> = mutableStateOf(null)
 
 
     var query : MutableState<String> = mutableStateOf("")
+    var searchedQuery : MutableState<String> = mutableStateOf("")
+    var offset: Int = 10
     var topAppBarTitle: MutableState<String> = mutableStateOf("Search")
     var navController: MutableState<NavController?> = mutableStateOf(null)
 
@@ -50,27 +60,6 @@ class RecipesViewModel : ViewModel() {
 
     private val _selectedFilter: MutableStateFlow<SearchFilter?> = MutableStateFlow(null)
     val selectedFilter = _filteredList.stateIn(viewModelScope, SharingStarted.Lazily, null)
-
-
-    private val _cuisineFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _dietFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _allergiesFilterOpen: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
-    val cuisineFilterOpen: StateFlow<Boolean> = _cuisineFilterOpen.asStateFlow()
-    val dietFilterOpen: StateFlow<Boolean> = _dietFilterOpen.asStateFlow()
-    val allergiesFilterOpen: StateFlow<Boolean> = _allergiesFilterOpen.asStateFlow()
-
-    fun toggleCuisineFilter() {
-        _cuisineFilterOpen.value = !_cuisineFilterOpen.value
-    }
-
-    fun toggleDietFilter() {
-        _dietFilterOpen.value = !_dietFilterOpen.value
-    }
-
-    fun toggleAllergiesFilter() {
-        _allergiesFilterOpen.value = !_allergiesFilterOpen.value
-    }
 
 
 
@@ -132,13 +121,53 @@ class RecipesViewModel : ViewModel() {
 
     }*/
 
+    fun getMoreRecipes() {
+        viewModelScope.launch {
+            recipesLoadMoreState = RecipesLoadMoreState.Loading
+
+            val selectedCuisines = _filteredList.value[0].selected.joinToString(separator = ",")
+            val selectedDiets = _filteredList.value[1].selected.joinToString(separator = ",")
+            val selectedIntolerances = _filteredList.value[2].selected.joinToString(separator = ",")
+
+            recipesLoadMoreState = try {
+                val listResult = RecipeApi.retrofitService.getResponse(
+                    query = searchedQuery.value,
+                    cuisine = selectedCuisines,
+                    diet = selectedDiets,
+                    intolerances = selectedIntolerances,
+                    offset = offset
+                )
+                offset += 10
+                (recipesUiState as? RecipesUiState.Success)?.response?.results?.addAll(listResult.results)
+
+                RecipesLoadMoreState.Success
+            } catch(e: IOException) {
+                Log.d("error", e.message!!)
+                RecipesLoadMoreState.Error
+            }
+
+        }
+    }
+
 
 
     fun getRecipes(query: String = "chicken") {
         viewModelScope.launch {
             recipesUiState = RecipesUiState.Loading
+
+            val selectedCuisines = _filteredList.value[0].selected.joinToString(separator = ",")
+            val selectedDiets = _filteredList.value[1].selected.joinToString(separator = ",")
+            val selectedIntolerances = _filteredList.value[2].selected.joinToString(separator = ",")
+
             recipesUiState = try {
-                val listResult = RecipeApi.retrofitService.getResponse(query = query)
+                val listResult = RecipeApi.retrofitService.getResponse(
+                    query = query,
+                    cuisine = selectedCuisines,
+                    diet = selectedDiets,
+                    intolerances = selectedIntolerances
+                )
+                searchedQuery.value = query
+                offset = 10
                 RecipesUiState.Success(
                     listResult
                 )

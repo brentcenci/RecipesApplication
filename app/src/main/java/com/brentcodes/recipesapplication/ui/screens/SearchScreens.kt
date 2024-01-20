@@ -45,6 +45,7 @@ import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 import com.brentcodes.recipesapplication.ui.NestedScreens
+import com.brentcodes.recipesapplication.ui.vm.RecipesLoadMoreState
 
 @Composable
 fun HomeScreen(
@@ -194,7 +195,7 @@ fun SearchScreen(
 
     val filtersList = viewModel.filteredList.collectAsState()
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
         item {
             SearchBar(onSearch = viewModel::getRecipes, viewModel = viewModel)
@@ -222,6 +223,17 @@ fun SearchScreen(
         } else {
             items(response.results) { result ->
                 RecipesPanel(viewModel = viewModel, recipe = result)
+            }
+            if (viewModel.recipesLoadMoreState is RecipesLoadMoreState.Loading) {
+                item {
+                    CircularProgressIndicator()
+                }
+            } else {
+                item {
+                    Button(onClick = { viewModel.getMoreRecipes() }) {
+                        Text(text = "Load more recipes")
+                    }
+                }
             }
         }
     }
