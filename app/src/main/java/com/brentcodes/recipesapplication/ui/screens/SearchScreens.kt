@@ -6,10 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,27 +39,30 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.SpoonacularResult
+import com.brentcodes.recipesapplication.ui.NestedScreens
+import com.brentcodes.recipesapplication.ui.theme.ThemeBlue
+import com.brentcodes.recipesapplication.ui.vm.RecipesLoadMoreState
 import com.brentcodes.recipesapplication.ui.vm.RecipesUiState
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
-import com.brentcodes.recipesapplication.ui.NestedScreens
-import com.brentcodes.recipesapplication.ui.vm.RecipesLoadMoreState
 
 @Composable
 fun HomeScreen(
-    recipesUiState: RecipesUiState,
     viewModel: RecipesViewModel,
     modifier: Modifier = Modifier
 ) {
+    val recipesUiState by viewModel.uiState.collectAsState()
     when (recipesUiState) {
 
         is RecipesUiState.Success -> SearchScreen(
-            response = recipesUiState.response,
+            response = (recipesUiState as RecipesUiState.Success).response,
             viewModel = viewModel,
             modifier = modifier,
         )
@@ -68,7 +74,30 @@ fun HomeScreen(
         is RecipesUiState.Loading -> LoadingScreen(
             modifier = modifier.fillMaxSize()
         )
+
+        is RecipesUiState.OnStart -> OnStartScreen(
+            modifier = modifier.fillMaxSize(),
+            viewModel = viewModel
+        )
     }
+}
+
+@Composable
+fun OnStartScreen(
+    modifier: Modifier = Modifier,
+    viewModel: RecipesViewModel
+) {
+    Box(modifier = modifier,
+        contentAlignment = Alignment.Center
+    )
+    {
+        Column {
+            Text(text = "Make a search to get started!", fontSize = 24.sp)
+            SearchBar(onSearch = viewModel::getRecipes, viewModel = viewModel)
+        }
+
+    }
+
 }
 
 @Composable
@@ -122,7 +151,7 @@ fun RecipesPanel(
             .fillMaxWidth()
             .height(100.dp)
             .padding(5.dp)
-            .background(Color(0xFF00abe3))
+            .background(ThemeBlue)
             .clickable {
                 //navigate to the specific recipe page
                 viewModel.selectRecipe(recipe = recipe)
@@ -150,6 +179,17 @@ fun RecipesPanel(
 }
 
 @Composable
+fun RecipePanelTag(text: String) {
+    Box(modifier = Modifier
+        .padding(end = 5.dp)
+        .background(Color.DarkGray, shape = RoundedCornerShape(3.dp))
+        .padding(2.dp))
+    {
+        Text(text = text.uppercase(), color = Color.White, fontSize = 10.sp)
+    }
+}
+
+@Composable
 fun TestRecipesPanel(
     viewModel: RecipesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     modifier: Modifier = Modifier,
@@ -160,29 +200,61 @@ fun TestRecipesPanel(
         modifier = modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clip(RoundedCornerShape(20))
-            .border(2.dp, Color.Blue, RoundedCornerShape(20))
             .clickable {
                 viewModel.selectRecipe(recipe = recipe)
                 navController.navigate(NestedScreens.Recipe.route)
             }
     ) {
-        AsyncImage(
-            model = recipe.image!!,
-            contentDescription = "Image of ${recipe.title}",
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Fit
-        )
-        Text(
-            text = recipe.title?.split(" ")?.joinToString(separator = " ") {
-                it.replaceFirstChar(Char::titlecaseChar)
-            }?: "No Title",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+        Row() {
+            Column(modifier = Modifier.weight(2f)) {
+                Text(
+                    text = recipe.title?.split(" ")?.joinToString(separator = " ") {
+                        it.replaceFirstChar(Char::titlecaseChar)
+                    }?: "No Title",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = "${recipe.summary?.replace("<b>","")?.replace("</b>","")}",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Row(Modifier.padding()) {
+                    if (recipe.vegan == true) {
+                        RecipePanelTag(text = "vegan")
+                    }
+                    if (recipe.vegetarian == true) {
+                        RecipePanelTag(text = "vegetarian")
+                    }
+                    if (recipe.dairyFree == true) {
+                        RecipePanelTag(text = "dairy free")
+                    }
+                    if (recipe.glutenFree == true) {
+                        RecipePanelTag(text = "gluten free")
+                    }
+                    if (recipe.cheap == true) {
+                        RecipePanelTag(text = "cheap")
+                    }
+                }
+            }
 
-        )
+            AsyncImage(
+                model = recipe.image!!,
+                contentDescription = "Image of ${recipe.title}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentScale = ContentScale.Fit
+            )
+        }
+        Spacer(Modifier.height(5.dp))
+        Divider(color = Color.LightGray)
     }
-
 }
 
 
@@ -193,8 +265,6 @@ fun SearchScreen(
     response: SpoonacularResult = SpoonacularResult()
 ) {
 
-    val filtersList = viewModel.filteredList.collectAsState()
-
     LazyColumn(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
         item {
@@ -202,11 +272,11 @@ fun SearchScreen(
         }
 
         item {
-            FiltersBar(viewModel = viewModel, filtersList = filtersList.value)
+            FiltersBar(viewModel = viewModel)
         }
 
 
-        val listOfResults = response.results
+        val listOfResults = (viewModel.uiState.value as RecipesUiState.Success).response.results
 
         //If no Search Results
         if (listOfResults.size == 0) {
@@ -222,7 +292,7 @@ fun SearchScreen(
         //If there are Search Results
         } else {
             items(response.results) { result ->
-                RecipesPanel(viewModel = viewModel, recipe = result)
+                TestRecipesPanel(viewModel = viewModel, recipe = result)
             }
             if (viewModel.recipesLoadMoreState is RecipesLoadMoreState.Loading) {
                 item {
@@ -282,7 +352,7 @@ fun SearchBar(
                     //also pass selected filters here
                 },
                 modifier = Modifier
-                    .background(Color(0xFF00abe3), CircleShape)
+                    .background(ThemeBlue, CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Search,

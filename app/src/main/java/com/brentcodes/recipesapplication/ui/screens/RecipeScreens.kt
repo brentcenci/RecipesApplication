@@ -27,11 +27,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.brentcodes.recipesapplication.model.spoonaculardata.AnalyzedInstructions
 import com.brentcodes.recipesapplication.model.spoonaculardata.Ingredients
 import com.brentcodes.recipesapplication.model.spoonaculardata.Nutrients
 import com.brentcodes.recipesapplication.model.spoonaculardata.Results
 import com.brentcodes.recipesapplication.model.spoonaculardata.Steps
+import com.brentcodes.recipesapplication.ui.theme.ThemeBlue
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
 @Composable
@@ -104,7 +104,7 @@ fun RecipeSummaryScreen(
 fun RecipeHeader(text: String) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .background(Color.Blue)) {
+        .background(ThemeBlue)) {
         Text(text = text, color = Color.White)
     }
 }

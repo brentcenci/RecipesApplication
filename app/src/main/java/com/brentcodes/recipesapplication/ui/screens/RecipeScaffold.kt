@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.brentcodes.recipesapplication.ui.NestedScreens
+import com.brentcodes.recipesapplication.ui.theme.ThemeBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,7 @@ fun TopNavBar(navController: NavController, viewModel: RecipesViewModel) {
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = Color.Blue,
+            containerColor = ThemeBlue,
             titleContentColor = Color.White,
             navigationIconContentColor = Color.White,
             actionIconContentColor = Color.White
@@ -87,7 +88,9 @@ fun TopNavBar(navController: NavController, viewModel: RecipesViewModel) {
 
 @Composable
 fun RecipeBottomNavBar(navController: NavController) {
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = ThemeBlue
+    ) {
 
         var selectedRoute by remember { mutableStateOf(navController.currentDestination?.route) }
         navController.addOnDestinationChangedListener { _, destination, _ ->

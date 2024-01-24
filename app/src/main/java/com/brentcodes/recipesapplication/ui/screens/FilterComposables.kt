@@ -12,24 +12,22 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.brentcodes.recipesapplication.model.SearchFilter
+import com.brentcodes.recipesapplication.ui.theme.ThemeBlue
 import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
 
@@ -42,10 +40,28 @@ fun RoundedChip(
     Button(
         onClick = onClick,
         modifier = modifier,
-        shape = CircleShape,
+        shape = /*if (!filter.open)
+        {
+            RoundedCornerShape(50)
+        }
+        else {
+            RoundedCornerShape(topStartPercent = 50, topEndPercent = 50, bottomStartPercent = 0, bottomEndPercent = 0)
+             }*/
+        RoundedCornerShape(50),
         contentPadding = PaddingValues(20.dp, 12.dp),
-        border = BorderStroke(2.dp, Color.Blue),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Blue)
+        border = BorderStroke(2.dp, ThemeBlue),
+        colors = if (filter.open or filter.selected.isNotEmpty()) {
+            ButtonDefaults.buttonColors(
+                containerColor = ThemeBlue,
+                contentColor = Color.White
+
+            ) } else {
+            ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = ThemeBlue
+
+            )
+        }
     ) {
         Text(text = filter.type)
     }
@@ -66,7 +82,6 @@ fun TestChipsWithDropDown(
 }
 
 
-
 @Composable
 fun Chip(
     text: String,
@@ -80,10 +95,10 @@ fun Chip(
             .clip(CircleShape)
             .background(if (isSelected) Color.Gray else Color.LightGray, CircleShape)
             .clickable { onClick() }
-            .border(2.dp, Color.Blue, CircleShape)
+            .border(2.dp, ThemeBlue, CircleShape)
         //add a clip to make a nice rounded rectangle
     ) {
-        Text(text = text, modifier = Modifier.padding(10.dp), color = Color.Blue)
+        Text(text = text, modifier = Modifier.padding(10.dp), color = ThemeBlue)
     }
 }
 
@@ -100,10 +115,9 @@ fun toggleOption(currentOptions: MutableList<String>, option: String) {
 @Composable
 fun FiltersBar(
     viewModel: RecipesViewModel,
-    filtersList: List<SearchFilter>
 ) {
-    val currentFiltersList by rememberUpdatedState(newValue = filtersList)
-    Log.d("FiltersBar", "Recomposing FiltersBar with FiltersList: ${filtersList}")
+    val currentFiltersList by viewModel.filteredList.collectAsState()
+    Log.d("FiltersBar", "Recomposing FiltersBar with FiltersList: ${currentFiltersList}")
 
     Row(
         modifier = Modifier
@@ -117,26 +131,30 @@ fun FiltersBar(
             )
         }
     }
-
     val currentFilter: SearchFilter? =
-        if (filtersList.any { it.open }) {
-            filtersList.filter { filter ->
+        if (currentFiltersList.any { it.open }) {
+            currentFiltersList.first { filter ->
                 filter.open
-            }.first()
+            }
         } else null
 
     if (currentFilter != null) {
         Column {
-            currentFilter.options.chunked(2).forEach {chunk ->
+            currentFilter.options.chunked(2).forEach { chunk ->
                 Row {
-                    chunk.forEach{option ->
+                    chunk.forEach { option ->
                         Row(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable {
-                                    toggleOption(currentFilter.selected, option)
-                                }
-                                .padding(8.dp),
+                                .clickable(
+                                    onClick = {
+                                        viewModel.toggleFilterOption(
+                                            option = option,
+                                            id = currentFilter.id
+                                        )
+                                    }
+                                )
+                                .padding(end = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Checkbox(
@@ -148,6 +166,7 @@ fun FiltersBar(
                     }
                 }
             }
+            Divider()
         }
     }
 }

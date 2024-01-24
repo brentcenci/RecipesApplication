@@ -7,5 +7,5 @@ import com.brentcodes.recipesapplication.ui.vm.RecipesViewModel
 
 @Composable
 fun RecipeApp(viewModel: RecipesViewModel, modifier: Modifier = Modifier) {
-    HomeScreen(recipesUiState = viewModel.recipesUiState, viewModel = viewModel, modifier = modifier)
+    HomeScreen(viewModel = viewModel, modifier = modifier)
 }
