@@ -79,11 +79,11 @@ fun RecipeSummaryScreen(
                     }
                 }
             }
-            item {
+            /*item {
                 Button(onClick = { Log.d("SummaryScreen", "Recipe State: $recipe") }) {
                     Text("Click for the Recipe State")
                 }
-            }
+            }*/
             /////////////////////////////////////////////
             //Summary of the Recipe a little further down
             /////////////////////////////////////////////
@@ -131,6 +131,9 @@ fun RecipeNutritionScreen(modifier: Modifier = Modifier, viewModel: RecipesViewM
     val recipe = remember { viewModel.selectedRecipe.value } ?: Results()
 
     LazyColumn(modifier = modifier.padding(top = 20.dp)) {
+
+
+
         item {
             Row(modifier = Modifier.padding(10.dp, 0.dp)) {
                 Text(text = "Nutrient", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, fontSize = 20.sp)
@@ -183,9 +186,64 @@ fun RecipeNutritionScreen(modifier: Modifier = Modifier, viewModel: RecipesViewM
         item {
             RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Sodium" })
         }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Potassium" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Iron" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Calcium" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Copper" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Folate" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Magnesium" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Manganese" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Zinc" })
+        }
         stickyHeader {
             RecipeHeader("Vitamins")
         }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin A" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B1" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B2" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B3" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B5" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B6" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin B12" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin C" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin E" })
+        }
+        item {
+            RecipeNutrientSection(nutrient = recipe.nutrition!!.nutrients.first { it.name == "Vitamin K" })
+        }
+
 
 
     }
@@ -251,10 +309,10 @@ fun RecipeInstructionsScreen(modifier: Modifier = Modifier, viewModel: RecipesVi
             }
 
         }
-        item {
+        /*item {
             Button(onClick = {Log.d("RecipeState", "${recipe.analyzedInstructions}")}) {
                 Text("click for analyzed instructions")
             }
-        }
+        }*/
     }
 }
