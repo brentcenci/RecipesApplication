@@ -19,6 +19,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
+import com.brentcodes.recipesapplication.ui.redesign.OnboardingScreens
 import com.brentcodes.recipesapplication.ui.screens.RecipeInstructionsScreen
 import com.brentcodes.recipesapplication.ui.screens.RecipeNutritionScreen
 import com.brentcodes.recipesapplication.ui.screens.RecipeScaffold
@@ -36,12 +37,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
+                    OnboardingScreens()
+/*                    val navController = rememberNavController()
                     val viewModel: RecipesViewModel = viewModel()
                     viewModel.navController.value = navController
                     val topBar = true
                     // (navController.currentDestination?.route != NestedScreens.Search.route)
-                    /*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*/
+                    *//*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*//*
 
                     var bottomBar by remember { mutableStateOf(false) }
 
@@ -111,7 +113,7 @@ class MainActivity : ComponentActivity() {
 
                             }
                         }
-                    }
+                    }*/
                 }
             }
         }

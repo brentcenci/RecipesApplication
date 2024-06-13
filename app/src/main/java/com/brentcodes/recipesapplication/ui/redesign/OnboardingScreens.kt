@@ -1,4 +1,4 @@
-package com.brentcodes.recipesapplication.ui.screens
+package com.brentcodes.recipesapplication.ui.redesign
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,18 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.brentcodes.recipesapplication.ui.Onboarding
-import com.brentcodes.recipesapplication.ui.OnboardingState
-import com.brentcodes.recipesapplication.ui.rememberOnboardingState
 
 @Composable
 fun OnboardingScreens(modifier: Modifier = Modifier) {
     val state = rememberOnboardingState(numScreens = 3)
     Onboarding(
         state = state,
-        { },
-        { },
-        { }
+        { OnboardingScreen(title = "Screen 1", subtitle = "Subtitle of Screen 1", buttonText = "Next", state = it) },
+        { OnboardingScreen(title = "Screen 2", subtitle = "Subtitle of Screen 2", buttonText = "Next", state = it) },
+        { OnboardingScreen(title = "Screen 3", subtitle = "Subtitle of Screen 3", buttonText = "Next", state = it) }
     )
 }
 
@@ -43,7 +40,7 @@ fun OnboardingScreen(
         Text(text = title)
         Text(text = subtitle)
         OnboardingIndicator(state = state, modifier = Modifier.fillMaxWidth())
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { state.goNext() }) {
             Text(buttonText)
         }
     }
