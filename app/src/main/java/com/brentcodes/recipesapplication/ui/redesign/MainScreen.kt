@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -40,14 +41,15 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+    val paddingValues = PaddingValues(horizontal = 10.dp)
     val searchBar = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
-            .padding(start = 10.dp, top = 10.dp)
             .fillMaxSize(),
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
         //Search Bar
-        Column {
+        Column(Modifier.padding(paddingValues)) {
             Row {
                 TextField(
                     value = searchBar.value,
@@ -66,19 +68,28 @@ fun MainScreen(modifier: Modifier = Modifier) {
         //Cuisines
         Column(
         ) {
-            MainScreenTitleText(text = "Cuisine")
+            val cuisines = mapOf(
+                "Italian" to Color.Red.copy(alpha = 0.2f),
+                "Spanish" to Color.Yellow.copy(alpha = 0.2f),
+                "Japanese" to Color.Green.copy(alpha = 0.2f),
+                "Chinese" to Color.Blue.copy(alpha = 0.2f),
+                "French" to Color.Cyan.copy(alpha = 0.2f),
+                "Australian" to Color.Magenta.copy(alpha = 0.2f),
+                "American" to Color.Gray.copy(alpha = 0.2f)
+            )
+            MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Cuisine")
             LazyRow {
-                items(10) {
+                items(cuisines.toList()) {
                     Box(
                         modifier = Modifier
                             .padding(5.dp)
-                            .background(Color.LightGray, RoundedCornerShape(50))
+                            .background(it.second, RoundedCornerShape(50))
                             .width(80.dp)
                             .aspectRatio(1f)
                             .padding(10.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = it.toString())
+                        Text(text = it.first, fontSize = 12.sp)
                     }
                 }
             }
@@ -89,7 +100,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         Column(
             //Modifier.padding(vertical = 20.dp)
         ) {
-            MainScreenTitleText(text = "Category")
+            MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Category")
             val selectedCategory = remember { mutableStateOf("Breakfast") }
             LazyRow {
                 items(listOf("Breakfast", "Dinner", "Soups", "Lunch", "Sandwiches", "Sauce", "Dips", "Salad", "Beverage")) {
@@ -129,17 +140,24 @@ fun MainScreen(modifier: Modifier = Modifier) {
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-
+        
+        //Find Random
+        Column{
+            MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Can't decide?")
+        }
     }
 
 }
 
 @Composable
 fun MainScreenTitleText(modifier: Modifier = Modifier, text: String) {
-    Text(
-        text = text,
-        color = Color.Black,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.SemiBold
-    )
+    Column(modifier = modifier) {
+        Text(
+            text = text,
+            color = Color.Black,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+
 }
