@@ -22,7 +22,7 @@ val highwayGothicFontFamily = FontFamily(
     Font(R.font.hwygoth, FontWeight.Normal),
 )
 
-val selectedFontFamily = highwayGothicFontFamily
+val selectedFontFamily = robotoFontFamily
 
 val Typography = Typography(
     bodyLarge = TextStyle(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
@@ -20,8 +21,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,11 +40,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.brentcodes.recipesapplication.ui.theme.DarkGrey
+import com.brentcodes.recipesapplication.ui.theme.LightGrey
+import com.brentcodes.recipesapplication.ui.theme.MainGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
-    val paddingValues = PaddingValues(horizontal = 10.dp)
+    val paddingValues = PaddingValues(horizontal = 20.dp)
     val searchBar = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
@@ -58,7 +64,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     label = { Text("Search for a recipe") },
                     leadingIcon = { Icon(Icons.Rounded.Search, "Search Icon") }
                 )
-                Button(onClick = { /*TODO*/ },) {
+                Button(onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(containerColor = MainGreen)) {
                     Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Filters")
                 }
             }
@@ -78,12 +84,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 "American" to Color.Gray.copy(alpha = 0.2f)
             )
             MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Cuisine")
-            LazyRow {
+            LazyRow(
+                contentPadding = paddingValues
+            ) {
                 items(cuisines.toList()) {
                     Box(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .background(it.second, RoundedCornerShape(50))
+                            .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
+                            .background(LightGrey, RoundedCornerShape(50))
                             .width(80.dp)
                             .aspectRatio(1f)
                             .padding(10.dp),
@@ -102,19 +110,17 @@ fun MainScreen(modifier: Modifier = Modifier) {
         ) {
             MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Category")
             val selectedCategory = remember { mutableStateOf("Breakfast") }
-            LazyRow {
+            LazyRow(
+                contentPadding = paddingValues
+            ) {
                 items(listOf("Breakfast", "Dinner", "Soups", "Lunch", "Sandwiches", "Sauce", "Dips", "Salad", "Beverage")) {
                     val isSelected = selectedCategory.value == it
                     Box(
                         modifier = Modifier
-                            .padding(5.dp)
+                            .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
                             .background(
-                                color = if (isSelected) Color(
-                                    100,
-                                    180,
-                                    100,
-                                    255
-                                ) else Color.LightGray, RoundedCornerShape(50)
+                                color = if (isSelected) MainGreen else LightGrey,
+                                RoundedCornerShape(50)
                             )
                             .padding(10.dp)
                             .clickable { selectedCategory.value = it },
@@ -124,13 +130,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     }
                 }
             }
-            LazyRow {
+            LazyRow(
+                contentPadding = paddingValues
+            ) {
                 items(10) {
                     Box(
                         modifier = Modifier
-                            .padding(5.dp)
+                            .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
                             .size(width = 150.dp, height = 200.dp)
-                            .background(Color.LightGray, RoundedCornerShape(20.dp))
+                            .background(LightGrey, RoundedCornerShape(20.dp))
                             .padding(10.dp)
                     ) {
                         Text(selectedCategory.value + " " + it.toString())
@@ -143,7 +151,26 @@ fun MainScreen(modifier: Modifier = Modifier) {
         
         //Find Random
         Column{
-            MainScreenTitleText(modifier = Modifier.padding(paddingValues), text = "Can't decide?")
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .background(DarkGrey, RoundedCornerShape(20.dp))
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .padding(10.dp)
+            ){
+                Column {
+                    Text(text = "Can't decide?", color = Color.White, fontSize = 30.sp)
+                    Text(text = "Let us make your life easier.", color = Color.White, fontSize = 16.sp)
+                    Button(onClick = { /*TODO*/ }, modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth()
+                        .height(70.dp), shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(containerColor = MainGreen, contentColor = Color.White)) {
+                        Text("Random Recipe")
+                        Icon(Icons.Rounded.PlayArrow, "Arrow Icon")
+                    }
+                }
+            }
         }
     }
 
