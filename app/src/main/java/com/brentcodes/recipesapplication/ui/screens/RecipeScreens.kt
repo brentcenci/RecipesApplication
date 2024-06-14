@@ -55,6 +55,7 @@ fun RecipeSummaryScreen(
                 .blur(15.dp, 15.dp),
             contentScale = ContentScale.FillWidth
         )
+
         LazyColumn(Modifier.padding(20.dp)) {
 
             /////////////////////////////////////////
