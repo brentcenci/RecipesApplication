@@ -1,5 +1,6 @@
 package com.brentcodes.recipesapplication.ui.redesign
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,9 +38,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.brentcodes.recipesapplication.R
 import com.brentcodes.recipesapplication.ui.theme.DarkGrey
 import com.brentcodes.recipesapplication.ui.theme.LightGrey
 import com.brentcodes.recipesapplication.ui.theme.MainGreen
@@ -53,6 +56,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
+        Image(painter = painterResource(id = R.drawable.munch), "Logo", modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.height(20.dp))
         //Search Bar
         Column(Modifier.padding(paddingValues)) {
