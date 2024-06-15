@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
@@ -30,6 +32,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -82,17 +86,23 @@ fun MainScreen(modifier: Modifier = Modifier) {
         //Search Bar
         item {
             Column(Modifier.padding(paddingValues)) {
-                Row {
-                    TextField(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
                         value = searchBar.value,
                         onValueChange = { searchBar.value} ,
                         maxLines = 1,
                         label = { Text("Search for a recipe") },
-                        leadingIcon = { Icon(Icons.Rounded.Search, "Search Icon") }
+                        leadingIcon = { Icon(Icons.Rounded.Search, "Search Icon") },
+                        shape = RoundedCornerShape(20.dp),
+                        trailingIcon = {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu Icon")
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Button(onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(containerColor = MainGreen)) {
-                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Filters")
-                    }
                 }
             }
         }
@@ -148,7 +158,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             contentAlignment = Alignment.Center
                         ) {
                             Column {
-                                Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier.size(60.dp).align(Alignment.CenterHorizontally))
+                                Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier
+                                    .size(60.dp)
+                                    .align(Alignment.CenterHorizontally))
                                 Text(text = it.first.replaceFirstChar { it.uppercase() }, fontSize = 12.sp, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
                             }
 
@@ -192,7 +204,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         Box(
                             modifier = Modifier
                                 .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
-                                .background(if (isSelected) MainGreen else LightGrey, RoundedCornerShape(10.dp))
+                                .background(
+                                    if (isSelected) MainGreen else LightGrey,
+                                    RoundedCornerShape(10.dp)
+                                )
                                 .width(100.dp)
                                 .aspectRatio(1f)
                                 .padding(10.dp)
@@ -200,7 +215,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             contentAlignment = Alignment.Center
                         ) {
                             Column {
-                                Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier.size(60.dp).align(Alignment.CenterHorizontally))
+                                Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier
+                                    .size(60.dp)
+                                    .align(Alignment.CenterHorizontally))
                                 Text(text = it.first.replaceFirstChar { it.uppercase() }, fontSize = 12.sp, color = if (isSelected) Color.White else Color.Black, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
                             }
 
