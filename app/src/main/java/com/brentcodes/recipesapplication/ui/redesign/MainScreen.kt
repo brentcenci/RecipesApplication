@@ -207,7 +207,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                LazyRow(
+                /*LazyRow(
                     contentPadding = paddingValues
                 ) {
                     items(listOf("breakfast", "dinner", "soups", "Lunch", "Sandwiches", "Sauce", "Dips", "Salad", "Beverage")) {
@@ -226,7 +226,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             Text(text = it, color = if (isSelected) Color.White else Color.Black)
                         }
                     }
-                }
+                }*/
                 LazyRow(
                     contentPadding = paddingValues
                 ) {
