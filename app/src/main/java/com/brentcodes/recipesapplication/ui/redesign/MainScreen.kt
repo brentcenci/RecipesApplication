@@ -22,11 +22,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,9 +39,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -87,21 +94,26 @@ val cuisines = mapOf(
     "thai" to R.drawable.padthai,
     "vietnamese" to R.drawable.banhmi
 )
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CleanMainScreen(modifier: Modifier = Modifier) {
     val padding = PaddingValues(horizontal = 20.dp)
     val filtersOpen = remember { mutableStateOf(false) }
-
-    LazyColumn(
-        contentPadding = PaddingValues(vertical = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        item { LogoSection(paddingValues = padding) }
-        item { SearchBarSection(paddingValues = padding, filtersOpen = filtersOpen.value, onFilterClick = { filtersOpen.value = !filtersOpen.value }) }
-        item { CategoriesSection(paddingValues = padding) }
-        item { RecipesSection(paddingValues = padding) }
-        item { RandomRecipeSection(paddingValues = padding) }
+    val bottomSheetState = rememberModalBottomSheetState()
+    Column {
+        LazyColumn(
+            contentPadding = PaddingValues(vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            item { LogoSection(paddingValues = padding) }
+            item { SearchBarSection(paddingValues = padding, filtersOpen = filtersOpen.value, onFilterClick = { filtersOpen.value = !filtersOpen.value }) }
+            item { CategoriesSection(paddingValues = padding) }
+            item { RecipesSection(paddingValues = padding) }
+            item { RandomRecipeSection(paddingValues = padding) }
+        }
+        FiltersBottomSheet(state = bottomSheetState, dismiss = { filtersOpen.value = false}, openState = filtersOpen.value )
     }
+    
 
 }
 
@@ -143,8 +155,11 @@ fun SearchBarSection(modifier: Modifier = Modifier, paddingValues: PaddingValues
             leadingIcon = { Icon(Icons.Rounded.Search, "Search Icon") },
             shape = RoundedCornerShape(20.dp),
             trailingIcon = {
-                IconButton(onClick = { onFilterClick() }, modifier = Modifier.clip(
-                    RoundedCornerShape(50)).size(40.dp) , colors=  filterIconColors) {
+                IconButton(onClick = { onFilterClick() }, modifier = Modifier
+                    .clip(
+                        RoundedCornerShape(50)
+                    )
+                    .size(40.dp) , colors=  filterIconColors) {
                     Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu Icon")
                 }
             },
@@ -263,4 +278,16 @@ fun MainScreenTitleText(modifier: Modifier = Modifier, text: String) {
         Text("View all", textDecoration = TextDecoration.Underline)
     }
 
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun FiltersBottomSheet(modifier: Modifier = Modifier, state: SheetState, dismiss: () -> Unit, openState: Boolean) {
+    if (openState) {
+        ModalBottomSheet(
+            onDismissRequest = { dismiss() }
+        ) {
+            Text("Hello")
+        }
+    }
 }
