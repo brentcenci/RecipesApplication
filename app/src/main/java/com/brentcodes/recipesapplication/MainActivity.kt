@@ -19,6 +19,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
+import com.brentcodes.recipesapplication.ui.redesign.CleanMainScreen
 import com.brentcodes.recipesapplication.ui.redesign.MainScreen
 import com.brentcodes.recipesapplication.ui.redesign.OnboardingScreens
 import com.brentcodes.recipesapplication.ui.screens.RecipeInstructionsScreen
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    CleanMainScreen()
 /*                    val navController = rememberNavController()
                     val viewModel: RecipesViewModel = viewModel()
                     viewModel.navController.value = navController
