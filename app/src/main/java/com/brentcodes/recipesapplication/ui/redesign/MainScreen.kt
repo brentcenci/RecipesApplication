@@ -187,8 +187,9 @@ fun CategoriesSection(modifier: Modifier = Modifier, paddingValues: PaddingValue
                     )
                     .width(80.dp)
                     .aspectRatio(1f)
-                    .padding(10.dp)
-                    .clickable { selectedCategory.value = it.first.lowercase() },
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { selectedCategory.value = it.first.lowercase() }
+                    .padding(10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Column {
