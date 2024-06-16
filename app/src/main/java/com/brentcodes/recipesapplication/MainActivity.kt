@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import com.brentcodes.recipesapplication.ui.NestedScreens
 import com.brentcodes.recipesapplication.ui.RecipeApp
 import com.brentcodes.recipesapplication.ui.redesign.CleanMainScreen
-import com.brentcodes.recipesapplication.ui.redesign.MainScreen
 import com.brentcodes.recipesapplication.ui.redesign.OnboardingScreens
 import com.brentcodes.recipesapplication.ui.screens.RecipeInstructionsScreen
 import com.brentcodes.recipesapplication.ui.screens.RecipeNutritionScreen
