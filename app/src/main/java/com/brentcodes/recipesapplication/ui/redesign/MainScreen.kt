@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -57,6 +59,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brentcodes.recipesapplication.R
@@ -280,14 +283,130 @@ fun MainScreenTitleText(modifier: Modifier = Modifier, text: String) {
 
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class
+)
 @Composable
 fun FiltersBottomSheet(modifier: Modifier = Modifier, state: SheetState, dismiss: () -> Unit, openState: Boolean) {
     if (openState) {
         ModalBottomSheet(
-            onDismissRequest = { dismiss() }
+            onDismissRequest = { dismiss() },
+            sheetMaxWidth = Dp.Unspecified
         ) {
-            Text("Hello")
+            LazyColumn(
+                modifier = Modifier.padding(20.dp),
+            ) {
+                item { MainScreenTitleText(text = "Categories") }
+                item {
+                    val categories = mapOf(
+                        "main course" to R.drawable.diet,
+                        "side dish" to R.drawable.sidedish,
+                        "dessert" to R.drawable.cupcake,
+                        "appetizer" to R.drawable.gilda,
+                        "salad" to R.drawable.salad,
+                        "bread" to R.drawable.bread,
+                        "breakfast" to R.drawable.pancakes,
+                        "soup" to R.drawable.soup,
+                        "beverage" to R.drawable.cocktail,
+                        "sauce" to R.drawable.tomatosauce,
+                        "marinade" to R.drawable.sauces,
+                        "finger food" to R.drawable.charcuterie,
+                        "snack" to R.drawable.nachos,
+                        "drink" to R.drawable.softdrink
+                    )
+                    FlowRow(
+                        maxItemsInEachRow = 4,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        categories.toList().forEach {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 5.dp, bottom = 5.dp)
+                                    .background(
+                                        LightGrey,
+                                        RoundedCornerShape(10.dp)
+                                    )
+                                    .width(80.dp)
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable { }
+                                    .padding(10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column {
+                                    Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier
+                                        .size(40.dp)
+                                        .align(Alignment.CenterHorizontally))
+                                    Text(text = it.first.replaceFirstChar { it.uppercase() }, fontSize = 10.sp, color = Color.Black, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
+                                }
+                            }
+                        }
+                    }
+                }
+                item { MainScreenTitleText(text = "Cuisines") }
+                item {
+                    val cuisines = mapOf(
+                        "african" to R.drawable.ugali,
+                        "asian" to R.drawable.rice,
+                        "american" to R.drawable.thanksgiving,
+                        "british" to R.drawable.scone,
+                        "cajun" to R.drawable.cookingpot,
+                        "caribbean" to R.drawable.peanutpunch,
+                        "chinese" to R.drawable.dumpling,
+                        "eastern european" to R.drawable.borscht,
+                        "european" to R.drawable.kielbasa,
+                        "french" to R.drawable.frenchbread,
+                        "german" to R.drawable.pretzel,
+                        "greek" to R.drawable.feta,
+                        "indian" to R.drawable.curry,
+                        "irish" to R.drawable.irishcoffee,
+                        "italian" to R.drawable.pasta,
+                        "japanese" to R.drawable.ramen,
+                        "jewish" to R.drawable.latkes,
+                        "korean" to R.drawable.bibimbap,
+                        "latin american" to R.drawable.molepoblano,
+                        "mediterranean" to R.drawable.lobster,
+                        "mexican" to R.drawable.mexicanfood,
+                        "middle eastern" to R.drawable.shakshuka,
+                        "nordic" to R.drawable.gravlax,
+                        "southern" to R.drawable.rib,
+                        "spanish" to R.drawable.seafoodpaella,
+                        "thai" to R.drawable.padthai,
+                        "vietnamese" to R.drawable.banhmi
+                    )
+                    FlowRow(
+                        maxItemsInEachRow = 4,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        cuisines.toList().forEach {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 5.dp, bottom = 5.dp)
+                                    .background(
+                                        LightGrey,
+                                        RoundedCornerShape(10.dp)
+                                    )
+                                    .width(80.dp)
+                                    .aspectRatio(1f)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable { }
+                                    .padding(10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column {
+                                    Image(painterResource(id = it.second), contentDescription = "", modifier = Modifier
+                                        .size(40.dp)
+                                        .align(Alignment.CenterHorizontally))
+                                    Text(text = it.first.replaceFirstChar { it.uppercase() }, fontSize = 10.sp, color = Color.Black, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
+                                }
+                            }
+                        }
+                    }
+                }
+                item { MainScreenTitleText(text = "Diet") }
+                item { MainScreenTitleText(text = "Allergies") }
+            }
+
         }
     }
 }
