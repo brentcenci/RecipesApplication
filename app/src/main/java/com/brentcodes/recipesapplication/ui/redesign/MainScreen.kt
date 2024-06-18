@@ -271,9 +271,7 @@ fun FilterFlowRow(modifier: Modifier = Modifier, filterGroup: Map<String, Int>) 
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalLayoutApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersBottomSheet(modifier: Modifier = Modifier, state: SheetState, dismiss: () -> Unit, openState: Boolean) {
     if (openState) {
