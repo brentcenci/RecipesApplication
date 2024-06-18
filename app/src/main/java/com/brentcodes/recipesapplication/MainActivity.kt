@@ -38,13 +38,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CleanMainScreen()
-/*                    val navController = rememberNavController()
+                    val navController = rememberNavController()
                     val viewModel: RecipesViewModel = viewModel()
                     viewModel.navController.value = navController
                     val topBar = true
                     // (navController.currentDestination?.route != NestedScreens.Search.route)
-                    *//*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*//*
+                    /*the above code needs to change to check live data for what the current destination is whenever a navigation occurs*/
 
                     var bottomBar by remember { mutableStateOf(false) }
 
@@ -114,7 +113,7 @@ class MainActivity : ComponentActivity() {
 
                             }
                         }
-                    }*/
+                    }
                 }
             }
         }

@@ -54,6 +54,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -179,19 +180,41 @@ fun CategoriesSection(modifier: Modifier = Modifier, paddingValues: PaddingValue
 
 @Composable
 fun RecipesSection(modifier: Modifier = Modifier, paddingValues: PaddingValues) {
-    MainScreenTitleText(modifier = modifier.padding(paddingValues), text = "Recipes")
+    MainScreenTitleText(modifier = modifier.padding(paddingValues), text = "Suggested")
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp)
     ) {
         items(10) {
-            Box(
+            /*Box(
                 modifier = Modifier
                     .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
-                    .size(width = 150.dp, height = 200.dp)
+                    .size(width = 200.dp, height = 300.dp)
                     .background(LightGrey, RoundedCornerShape(10.dp))
                     .padding(10.dp)
             ) {
                 Text(it.toString())
+            }*/
+            val gradient = remember {
+                Brush.verticalGradient(
+                    colors = listOf(Color.Transparent, DarkGrey),
+                    startY = 0F,
+                    endY = Float.POSITIVE_INFINITY
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(top = 5.dp, end = 10.dp, bottom = 5.dp)
+                    .size(width = 170.dp, height = 250.dp)
+                    .background(LightGrey, RoundedCornerShape(10.dp))
+                    .background(gradient, RoundedCornerShape(10.dp))
+                    .padding(10.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text("Recipe Name", color = Color.White, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }
